@@ -1,0 +1,1 @@
+DROP TABLE beneficiary_ps_cases;
