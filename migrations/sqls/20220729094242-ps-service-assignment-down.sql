@@ -1,1 +1,0 @@
-DROP TABLE ps_service_assignment;
