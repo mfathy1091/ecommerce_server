@@ -31,6 +31,14 @@ const show = async (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
+const getOne = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const psCase = await psCaseService.getOne(Number(req.params.psCaseId))
+        res.json(psCase)
+    } catch (err) {
+        next(err)
+    }
+}
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
     const psCase: Omit<BasePsCase, 'id'> = {
@@ -102,14 +110,7 @@ const updateIsDirect = async (_req: Request, res: Response, next: NextFunction) 
     
 }
 
-const getOne = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const psCase = await psCaseService.getOne(Number(req.params.psCaseId))
-        res.json(psCase)
-    } catch (err) {
-        next(err)
-    }
-}
+
 
 export {
     index,

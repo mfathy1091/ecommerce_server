@@ -38,12 +38,12 @@ export default class PsServiceModel {
     async create(psService: BasePsService): Promise<BasePsService> {
         try {
             
-            const conn = await pool.connect()
+            const connection= await pool.connect()
             const sql = 'INSERT INTO ps_services (service_name, service_date, beneficiary_id, ps_case_id) VALUES($1, $2, $3, $4) RETURNING *'
-            const result = await conn.query(sql, [psService.service_name, psService.service_date, psService.beneficiary_id, psService.ps_case_id])
+            const result = await connection.query(sql, [psService.service_name, psService.service_date, psService.beneficiary_id, psService.ps_case_id])
             const newPsService = result.rows[0]
 
-            conn.release()
+            connection.release()
 
             return newPsService
         } catch (err) {

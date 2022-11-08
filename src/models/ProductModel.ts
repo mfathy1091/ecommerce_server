@@ -1,11 +1,11 @@
 import pool from '../config/db.config';
 export type Product = {
     id?: number,
-    product_name: string,
+    name: string,
     category_id: string,
     description: string,
-    product_img: string,
-    price: number,
+    image: string,
+    is_discontinued: boolean,
 }
 
 export default class ProductModel {
@@ -16,19 +16,19 @@ export default class ProductModel {
             const sql = `
                 SELECT * 
                 FROM products
-                WHERE product_name ILIKE $1 
+                WHERE name ILIKE $1 
                 ORDER BY id DESC
                 LIMIT $3
                 OFFSET (($2 - 1) * $3);
             `;
-            const result = await connection.query(sql, [`%${query.stringToSearch}%`, query.page, query.limit]);
+            const result = await connection.query(sql, [`%${query.searchKeyword}%`, query.page, query.limit]);
             
             const totalRowsSql = `
                 SELECT COUNT(*) 
                 FROM products 
-                WHERE product_name ILIKE $1 
+                WHERE name ILIKE $1 
             `;
-            const totalRowsResult = await connection.query(totalRowsSql,  [`%${query.stringToSearch}%`]);
+            const totalRowsResult = await connection.query(totalRowsSql,  [`%${query.searchKeyword}%`]);
 
             const data = {
                 products: result.rows,
@@ -55,10 +55,11 @@ export default class ProductModel {
     }
 
     async create(product: Product): Promise<Product> {
+        console.log(product)
         try {
             const connection = await pool.connect();
-            const sql = "INSERT INTO products (product_name, price) VALUES ($1, $2) RETURNING *";
-            const result = await connection.query(sql, [product.product_name, product.price]);
+            const sql = "INSERT INTO products (category_id, name, description, is_discontinued, image) VALUES ($1, $2, $3, $4, $5) RETURNING *";
+            const result = await connection.query(sql, [product.category_id, product.name, product.description, product.is_discontinued, product.image]);
             connection.release();
             const newProduct = result.rows[0];
             return newProduct;
@@ -70,8 +71,8 @@ export default class ProductModel {
     async update(productId: string, product: Omit<Product, "id">): Promise<Product> {
         try {
             const connection = await pool.connect();
-            const sql = "UPDATE products SET product_name = $1, price = $2 WHERE id=$3 RETURNING *";
-            const result = await connection.query(sql, [product.product_name, product.price, productId]);
+            const sql = "UPDATE products SET category_id=$1 name=$2, description=$3, is_discontinued=$4, image=$5 WHERE id=$6 RETURNING *";
+            const result = await connection.query(sql, [product.category_id, product.name, product.description, product.is_discontinued, product.image, productId]);
             connection.release();
             const updatedProduct = result.rows[0];
             return updatedProduct;

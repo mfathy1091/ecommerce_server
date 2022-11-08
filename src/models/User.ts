@@ -7,7 +7,7 @@ export type BaseUser = {
     full_name?: string,
     role_id: number,
     refresh_token?: string,
-    avatar_url?: string,
+    avatar?: string,
     is_active: number
 }
 
@@ -25,14 +25,14 @@ export default class UserModel {
                 OFFSET (($2 - 1) * $3);
                 `;
             
-            const result = await connection.query(sql, [`%${query.keyword}%`, query.page, query.limit]);
+            const result = await connection.query(sql, [`%${query.searchKeyword}%`, query.page, query.limit]);
             
             const totalRowsSql = `
             SELECT COUNT(*) 
             FROM users 
             WHERE full_name ILIKE $1 
             `;
-            const totalRowsResult = await connection.query(totalRowsSql,  [`%${query.keyword}%`]);
+            const totalRowsResult = await connection.query(totalRowsSql,  [`%${query.searchKeyword}%`]);
             
             const data = {
                 users: result.rows,
@@ -62,12 +62,12 @@ export default class UserModel {
     async create(user: BaseUser): Promise<BaseUser> {
         try {
             
-            const conn = await pool.connect()
+            const connection= await pool.connect()
             const sql = 'INSERT INTO users (full_name, username, email, password, role_id, is_active) VALUES($1, $2, $3, $4, $5, $6) RETURNING id, full_name, username, email, role_id, is_active'
-            const result = await conn.query(sql, [user.full_name, user.username, user.email, user.password, user.role_id, user.is_active])
+            const result = await connection.query(sql, [user.full_name, user.username, user.email, user.password, user.role_id, user.is_active])
             const newUser = result.rows[0]
 
-            conn.release()
+            connection.release()
 
             return newUser
         } catch (err) {

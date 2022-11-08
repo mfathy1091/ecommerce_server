@@ -7,7 +7,7 @@ const index = async (_req: Request, res: Response, next: NextFunction) => {
   const query = {
     page: parseInt(_req.query.page as string),
     limit: parseInt(_req.query.limit as string) || 5,
-    keyword: _req.query.keyword as string || "",
+    searchKeyword: _req.query.searchKeyword as string || "",
   }
   try {
     const users = await userModel.index(query)
@@ -35,7 +35,7 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
     password: req.body.password,
     full_name: req.body.fullName,
     role_id: req.body.roleId,
-    avatar_url: req.body.avatarUrl,
+    avatar: req.body.avatar,
     is_active: req.body.isActive
   }
   try {

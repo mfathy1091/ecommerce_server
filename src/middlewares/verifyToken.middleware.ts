@@ -18,7 +18,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     // check ac token
     const authHeader = req.headers['authorization'];
     if (!authHeader) {
-      return res.status(403).json("Authorization faild: Auth header is not set!")
+      return res.status(401).json("Authorization faild: Auth header is not set!")
     }
 
     // (1) Verify the token
@@ -28,7 +28,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
       process.env.ACCESS_TOKEN_SECRET as unknown as string,
       (err, decoded) => {
         if (err){ //invalid token
-          return res.status(403).json('Authorization faild: Access token is invalid / missing');
+          return res.status(401).json('Authorization faild: Access token is invalid / missing');
         }  
 
         // (2) if verified, attached userId and roleId to the next middleware / controller
@@ -37,7 +37,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
         next();
       })
   } catch (err) {
-    return res.status(403).send(`Authorization faild: ${(err as Error).message}`)
+    return res.status(401).send(`Authorization faild: ${(err as Error).message}`)
   }
 }
 

@@ -29,7 +29,7 @@ const uploadAvatar = async (req: Request, res: Response, next: NextFunction) => 
 
           res.status(200).json({
             msg: "Uploaded successfully",
-            avatarUrl: result?.secure_url
+            avatar: result?.secure_url
           })
         }
       )

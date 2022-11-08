@@ -35,12 +35,12 @@ export default class PsServiceModel {
     async create(role: BaseRole): Promise<BaseRole> {
         try {
             
-            const conn = await pool.connect()
+            const connection= await pool.connect()
             const sql = 'INSERT INTO roles (role_name) VALUES($1) RETURNING *'
-            const result = await conn.query(sql, [role.role_name])
+            const result = await connection.query(sql, [role.role_name])
             const newPsService = result.rows[0]
 
-            conn.release()
+            connection.release()
 
             return newPsService
         } catch (err) {

@@ -45,12 +45,12 @@ export default class PsCaseModel {
     async create(psCase: BasePsCase): Promise<BasePsCase> {
         try {
 
-            const conn = await pool.connect()
+            const connection= await pool.connect()
             const sql = 'INSERT INTO ps_cases (referral_source, created_by, assigned_to, assigned_by) VALUES($1, $2, $3, $4) RETURNING *'
-            const result = await conn.query(sql, [psCase.referral_source, psCase.created_by, psCase.assigned_to, psCase.assigned_by])
+            const result = await connection.query(sql, [psCase.referral_source, psCase.created_by, psCase.assigned_to, psCase.assigned_by])
             const newPsCase = result.rows[0]
 
-            conn.release()
+            connection.release()
 
             return newPsCase
         } catch (err) {

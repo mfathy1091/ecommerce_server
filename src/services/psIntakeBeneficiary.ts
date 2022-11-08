@@ -14,7 +14,7 @@ export class PsIntakeBeneficiaryQueries {
     async getBeneficiariesInPsIntake(): Promise<{ name: string, price: number, order_id: string }[]> {
         try {
             //@ts-ignore
-            const conn = await pool.connect()
+            const connection= await pool.connect()
             const sql = `
                 SELECT 
                     b.id, b.name, b.file_id
@@ -26,9 +26,9 @@ export class PsIntakeBeneficiaryQueries {
             `
 
 
-            const result = await conn.query(sql)
+            const result = await connection.query(sql)
 
-            conn.release()
+            connection.release()
 
             return result.rows
         } catch (err) {
@@ -44,7 +44,7 @@ export class PsIntakeBeneficiaryQueries {
             // get services for a specific beneficiary (for all psIntakes)
             // get services for a specific psIntake (for all included beneficiaries)
 
-            const conn = await pool.connect()
+            const connection= await pool.connect()
             
             // get services for a specific beneficiary for a specific psIntake    --- MOST USED ---
             const sql = `
@@ -58,9 +58,9 @@ export class PsIntakeBeneficiaryQueries {
             `
 
 
-            const result = await conn.query(sql)
+            const result = await connection.query(sql)
 
-            conn.release()
+            connection.release()
 
             return result.rows
         } catch (err) {
@@ -74,7 +74,7 @@ export class PsIntakeBeneficiaryQueries {
             // get problems for a specific beneficiary (for all psIntakes)
             // get problems for a specific psIntake (for all included beneficiaries)
 
-            const conn = await pool.connect()
+            const connection= await pool.connect()
             
             // get problems for a specific beneficiary for a specific psIntake    --- MOST USED ---
             const sql = `
@@ -88,9 +88,9 @@ export class PsIntakeBeneficiaryQueries {
             `
 
 
-            const result = await conn.query(sql)
+            const result = await connection.query(sql)
 
-            conn.release()
+            connection.release()
 
             return result.rows
         } catch (err) {
@@ -104,7 +104,7 @@ export class PsIntakeBeneficiaryQueries {
             // get problems for a specific beneficiary (for all psIntakes)
             // get problems for a specific psIntake (for all included beneficiaries)
 
-            const conn = await pool.connect()
+            const connection= await pool.connect()
             
             // get problems for a specific beneficiary for a specific psIntake    --- MOST USED ---
             const sql = `
@@ -118,9 +118,9 @@ export class PsIntakeBeneficiaryQueries {
             `
 
 
-            const result = await conn.query(sql)
+            const result = await connection.query(sql)
 
-            conn.release()
+            connection.release()
 
             return result.rows
         } catch (err) {

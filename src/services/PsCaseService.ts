@@ -39,7 +39,6 @@ async function getOne(psCaseId: number): Promise<PsCase> {
 
         if (result.rowCount === 0) throw new Error(`PS Case ${psCaseId} not found`);
         
-        // return result.rows;
         return {
             id: result.rows[0].id,
             referral_source: result.rows[0].referral_source,
@@ -71,14 +70,13 @@ async function addBeneficiary(isDirect: number, psCaseId: number, beneficiaryId:
     try {
         const sql = 'INSERT INTO beneficiary_ps_cases (is_direct, ps_case_id, beneficiary_id) VALUES($1, $2, $3) RETURNING *'
         //@ts-ignore
-        const conn = await pool.connect()
+        const connection= await pool.connect()
 
-        const result = await conn
-            .query(sql, [isDirect, psCaseId, beneficiaryId])
+        const result = await pool.query(sql, [isDirect, psCaseId, beneficiaryId])
 
         const order = result.rows[0]
 
-        conn.release()
+        connection.release()
 
         return order
     } catch (err) {
@@ -90,14 +88,13 @@ async function removeBeneficiary(psCaseId: number, beneficiaryId: number) {
     try {
         const sql = "DELETE FROM beneficiary_ps_cases WHERE beneficiary_id=$1 AND ps_case_id=$2 RETURNING *";
         //@ts-ignore
-        const conn = await pool.connect()
+        const connection= await pool.connect()
 
-        const result = await conn
-            .query(sql, [beneficiaryId, psCaseId])
+        const result = await pool.query(sql, [beneficiaryId, psCaseId])
 
         const order = result.rows[0]
 
-        conn.release()
+        connection.release()
 
         return order
     } catch (err) {

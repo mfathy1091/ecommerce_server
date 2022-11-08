@@ -38,12 +38,12 @@ export default class ServiceAssignmentModel {
     async create(serviceAssignment: BaseServiceAssignment): Promise<BaseServiceAssignment> {
         try {
 
-            const conn = await pool.connect()
+            const connection= await pool.connect()
             const sql = 'INSERT INTO service_assignments (service_id, beneficiary_id, ps_intake_id, service_date) VALUES($1, $2, $3, $4) RETURNING *'
-            const result = await conn.query(sql, [serviceAssignment.service_id, serviceAssignment.beneficiary_id, serviceAssignment.ps_intake_id, serviceAssignment.service_date])
+            const result = await connection.query(sql, [serviceAssignment.service_id, serviceAssignment.beneficiary_id, serviceAssignment.ps_intake_id, serviceAssignment.service_date])
             const newServiceAssignment = result.rows[0]
 
-            conn.release()
+            connection.release()
 
             return newServiceAssignment
         } catch (err) {

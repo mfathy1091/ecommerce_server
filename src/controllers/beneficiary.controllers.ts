@@ -11,7 +11,7 @@ const getAll = async (_req: Request, res: Response, next:NextFunction) => {
     const query = {
         page: parseInt(_req.query.page as string),
         limit: parseInt(_req.query.limit as string) || 5,
-        stringToSearch: _req.query.stringToSearch as string || "",
+        searchKeyword: _req.query.searchKeyword as string || "",
     }
     try {
         const data = await beneficiaryModel.index(query)

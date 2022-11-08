@@ -3,6 +3,7 @@ import { Pool } from 'pg'
 
 dotenv.config()
 
+
 const {
     POSTGRES_HOST,
     POSTGRES_DB,
@@ -19,6 +20,7 @@ let envVariables = {
     database: POSTGRES_DB_TEST,
     user: POSTGRES_USER,
     password: POSTGRES_PASSWORD,
+    
 }
 
 if (NODE_ENV === 'test') {
@@ -27,6 +29,7 @@ if (NODE_ENV === 'test') {
         database: POSTGRES_DB_TEST,
         user: POSTGRES_USER,
         password: POSTGRES_PASSWORD,
+        
     }
 }
 
@@ -43,7 +46,13 @@ if(!NODE_ENV || !['dev', 'test']){
     throw new Error('NODE_ENV is not set')
 }
 
-const pool = new Pool(envVariables);
+
+const pool = new Pool({
+    ...envVariables,
+    max: 10, // 10 connections, if not released, the db will hang
+    connectionTimeoutMillis: 0,  // 0 is indifinite
+    idleTimeoutMillis: 0    // when to delete an idle connection, (0 is not to delete)
+});
 
 pool.on('error', (error: Error) => {
     console.error("DB Connection Error")

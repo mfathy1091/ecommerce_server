@@ -25,7 +25,7 @@ export default class BeneficiaryModel {
             LIMIT $3
             OFFSET (($2 - 1) * $3);
             `;
-            const result = await connection.query(sql, [`%${query.stringToSearch}%`, query.page, query.limit]);
+            const result = await connection.query(sql, [`%${query.searchKeyword}%`, query.page, query.limit]);
 
             const totalRowsSql = `
             SELECT COUNT(*) 
@@ -35,7 +35,7 @@ export default class BeneficiaryModel {
             OR individual_number ILIKE $1
             OR passport_number ILIKE $1
             `;
-            const totalRowsResult = await connection.query(totalRowsSql,  [`%${query.stringToSearch}%`]);
+            const totalRowsResult = await connection.query(totalRowsSql,  [`%${query.searchKeyword}%`]);
 
             const data = {
                 beneficiaries: result.rows,
@@ -65,11 +65,11 @@ export default class BeneficiaryModel {
     async create(beneficiary: BaseBeneficiary): Promise<BaseBeneficiary> {
         try {
             console.log(beneficiary)
-            const conn = await pool.connect()
+            const connection= await pool.connect()
             const sql = 'INSERT INTO beneficiaries (full_name, file_number, individual_number, passport_number) VALUES($1, $2, $3, $4) RETURNING *'
-            const result = await conn.query(sql, [beneficiary.full_name, beneficiary.file_number, beneficiary.individual_number, beneficiary.passport_number])
+            const result = await connection.query(sql, [beneficiary.full_name, beneficiary.file_number, beneficiary.individual_number, beneficiary.passport_number])
             const newBeneficiary = result.rows[0]
-            conn.release()
+            connection.release()
             console.log(newBeneficiary)
             return newBeneficiary
         } catch (err) {

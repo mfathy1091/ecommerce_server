@@ -7,7 +7,7 @@ const index = async (_req: Request, res: Response, next:NextFunction) => {
     const query = {
         page: parseInt(_req.query.page as string),
         limit: parseInt(_req.query.limit as string) || 5,
-        stringToSearch: _req.query.stringToSearch as string || "",
+        searchKeyword: _req.query.searchKeyword as string || "",
     }
 
     try {
@@ -29,11 +29,13 @@ const show = async (req: Request, res: Response, next:NextFunction) => {
 
 const create = async (req: Request, res: Response, next:NextFunction) => {
     const product: Product = {
-        product_name: req.body.productName,
-        category_id: req.body.categoryId,
+        category_id: req.body.category_id,
+        name: req.body.name,
+        is_discontinued: false,
+        // is_discontinued: req.body.is_discontinued,
         description: req.body.description,
-        product_img: req.body.productImg,
-        price: req.body.price,
+        image: 'https://res.cloudinary.com/dztskndab/image/upload/v1662985098/avatar/avatar_czgymz.png',
+        // image: req.body.image,
     }
     try {
         const newProduct = await productModel.create(product)
@@ -46,11 +48,11 @@ const create = async (req: Request, res: Response, next:NextFunction) => {
 
 const update = async (req: Request, res: Response, next:NextFunction) => {
     const product: Omit<Product, "id"> = {
-        product_name: req.body.productName,
-        category_id: req.body.categoryId,
+        category_id: req.body.category_id,
+        name: req.body.name,
+        is_discontinued: req.body.is_discontinued,
         description: req.body.description,
-        product_img: req.body.productImg,
-        price: req.body.price,
+        image: req.body.image,
     }
     try {
         const newProduct = await productModel.update(req.params.productId, product)
