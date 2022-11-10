@@ -31,7 +31,7 @@ router.use('/attributes', attributeRouter)
 router.use('/attribute-values', attributeValueRouter)
 // app.use(verifyToken);
 
-router.use('/roles', isAdmin, verifyToken, roleRouter)
+router.use('/roles', verifyToken, roleRouter)
 router.use('/users', verifyToken, userRouter)
 router.use('/products', productRouter)
 router.use('/orders', verifyToken, orderRouter)

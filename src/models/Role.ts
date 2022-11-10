@@ -2,7 +2,7 @@ import pool from '../config/db.config'
 
 export type BaseRole = {
     id?: number,
-    role_name: string,
+    name: string,
 }
 
 export default class PsServiceModel {
@@ -36,8 +36,8 @@ export default class PsServiceModel {
         try {
             
             const connection= await pool.connect()
-            const sql = 'INSERT INTO roles (role_name) VALUES($1) RETURNING *'
-            const result = await connection.query(sql, [role.role_name])
+            const sql = 'INSERT INTO roles (name) VALUES($1) RETURNING *'
+            const result = await connection.query(sql, [role.name])
             const newPsService = result.rows[0]
 
             connection.release()
@@ -45,7 +45,7 @@ export default class PsServiceModel {
             return newPsService
         } catch (err) {
             console.log(err)
-            throw new Error(`unable create role (${role.role_name}): ${(err as Error).message} `)
+            throw new Error(`unable create role (${role.name}): ${(err as Error).message} `)
         }
     }
 
@@ -54,7 +54,7 @@ export default class PsServiceModel {
         try {
             const connection = await pool.connect();
             const sql = "UPDATE roles SET role = $1 WHERE id = $5 RETURNING *";
-            const result = await connection.query(sql, [role.role_name, roleId]);
+            const result = await connection.query(sql, [role.name, roleId]);
             connection.release();
             const updatedPsService = result.rows[0];
             return updatedPsService;

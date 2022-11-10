@@ -30,7 +30,7 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
     username: req.body.username,
     password: req.body.password,
     role_id: Number(req.body.roleId),
-    is_active: Number(req.body.isActive)
+    is_active: Boolean(req.body.isActive)
   }
 
   try {

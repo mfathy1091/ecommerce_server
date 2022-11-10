@@ -25,7 +25,7 @@ const show = async (req: Request, res: Response, next:NextFunction) => {
 
 const create = async (req: Request, res: Response, next:NextFunction) => {
     const role: Omit<BaseRole, 'id'> = {
-        role_name: req.body.role_name,
+        name: req.body.name,
     }
     try {
         const newPsService = await roleModel.create(role)
@@ -38,7 +38,7 @@ const create = async (req: Request, res: Response, next:NextFunction) => {
 
 const update = async (req: Request, res: Response, next:NextFunction) => {
     const role: Omit<BaseRole, "id"> = {
-        role_name: req.body.role_name,
+        name: req.body.name,
     }
     try {
         const updatedPsService = await roleModel.update(Number(req.params.roleId), role)
