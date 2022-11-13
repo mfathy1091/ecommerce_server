@@ -23,8 +23,6 @@ const findByUsername = async (username: string): Promise<BaseUser | null> => {
 
 
 
-
-
 export {
 	findByUsername,
 }

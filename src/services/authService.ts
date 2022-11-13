@@ -64,6 +64,30 @@ const getUserByRefreshToken = async (refreshToken: string): Promise<any> => {
   }
 }
 
+const getUserDetails = async (userId: number): Promise<BaseUser | null> => {
+	try {
+		const connection = await pool.connect();
+		const sql = `
+			SELECT 
+				users.id AS userId, users.username, users.full_name AS fullName, 
+				users.email, users.avatar, users.is_active AS isActive,
+				roles.name AS roleName
+			FROM users 
+			LEFT OUTER JOIN roles ON users.role_id = roles.id 
+			WHERE users.username=($1)`
+		const result = await connection.query(sql, [userId])
+
+		if (result.rows.length > 0) {
+			return result.rows[0];
+		} else {
+			return null
+		}
+
+	} catch (err) {
+		throw new Error(`Could not get users. Error:  ${(err as Error).message}`)
+	}
+}
+
 
 const generateToken = (user: BaseUser): string => {
   const token = jwt.sign({ user }, process.env.TOKEN_SECRET as unknown as string);
@@ -75,4 +99,5 @@ export {
   getUserByUsername,
   getUserByRefreshToken,
   generateToken,
+  getUserDetails
 }

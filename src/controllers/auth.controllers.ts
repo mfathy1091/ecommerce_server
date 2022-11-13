@@ -155,29 +155,18 @@ const getAuthUser = async (req: Request, res: Response, next: NextFunction) => {
   // (1) get userID from req (it was attached when verifyToken was called)
   const userId = (req as AuthRequest).userId;
   if (!userId){
-    return res.status(401).json("Authentication failed: Token has no userId!");
+    return res.status(401).json("Authentication failed: Access token has no userId!");
   }
 
   try {
     // (2) Check if user exists
-    const user = await userModel.show(userId) // user id is comming from the verifyToken middleware
+    const user = await authService.getUserDetails(userId) // user id is comming from the verifyToken middleware
     if (!user){
       return res.status(401).json("Authentication failed: User not found!");
     }
 
-    // (3) execlude user's sensitive data before sending it
-    const userData = {
-      id: user.id,
-      username: user.username,
-      fullName: user.full_name,
-      email: user.email,
-      avatar: user.avatar,
-      roleId: user.role_id,
-      isActive: user.is_active
-    }
-
     // (4) send the data
-    return res.status(200).json(userData);
+    return res.status(200).json({user: user});
 
   } catch (err) {
     next(err)  

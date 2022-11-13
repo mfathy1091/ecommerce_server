@@ -6,6 +6,8 @@ interface MulterRequest extends Request {
 }
 
 export default (req: Request, res: Response, next:NextFunction) => {
+    
+    console.log(req.body.file)
     // check file exists
     if(typeof (req as MulterRequest).file === 'undefined' || typeof req.body === 'undefined')
     return res.status(400).json({msg: "Problem with uploading image"})
@@ -25,10 +27,10 @@ export default (req: Request, res: Response, next:NextFunction) => {
     }
     
     // define file size
-    if((req as MulterRequest).file.size > 1024 * 1024) {
+    if((req as MulterRequest).file.size > 3 * 1024 * 1024) {
         // remove file from upload folder
         fs.unlinkSync(image)
-        return res.status(400).json({msg: "This file is too large (Max: 1MB)"})
+        return res.status(400).json({msg: "This file is too large (Max: 3MB)"})
     }
     // success
     next();

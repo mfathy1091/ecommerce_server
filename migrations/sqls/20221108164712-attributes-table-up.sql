@@ -5,3 +5,11 @@ CREATE TABLE attributes (
     is_active Boolean NOT NULL DEFAULT false,
     image VARCHAR(255)
 );
+
+
+INSERT INTO attributes
+  (name, slug)
+VALUES
+  ('Material', 'material'),
+  ('Color', 'color'),
+  ('Frame Shape', 'frame-shape')

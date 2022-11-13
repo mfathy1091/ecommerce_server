@@ -49,7 +49,7 @@ if(!NODE_ENV || !['dev', 'test']){
 
 const pool = new Pool({
     ...envVariables,
-    max: 10, // 10 connections, if not released, the db will hang
+    max: 3, // 10 connections, if not released, the db will hang
     connectionTimeoutMillis: 0,  // 0 is indifinite
     idleTimeoutMillis: 0    // when to delete an idle connection, (0 is not to delete)
 });
