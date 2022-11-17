@@ -97,10 +97,12 @@ export default class ProductModel {
     try {
       const sql = `
         SELECT 
-          products.id, products.name, products.description, products.image, products.category_id,
-          brands.id AS "brandId", brands.name as "brandName"
+          products.id, products.name, products.description, products.image,
+          brands.id AS "brandId", brands.name as "brandName",
+          categories.id AS "categoryId", categories.name as "categoryName"
         FROM products 
         LEFT JOIN brands ON products.brand_id = brands.id
+        LEFT JOIN categories ON products.category_id = categories.id
         WHERE products.id=($1)
       `;
       const result = await connection.query(sql, [id]);

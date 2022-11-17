@@ -9,6 +9,7 @@ CREATE TABLE brands (
 INSERT INTO brands
   (name, slug)
 VALUES
+  ('Police', 'Police'),
   ('Hoya', 'hoya'),
   ('Fred', 'fred'),
   ('Dior', 'dior'),
