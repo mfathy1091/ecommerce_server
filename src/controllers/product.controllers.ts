@@ -53,7 +53,7 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
     is_discontinued: false,
     // is_discontinued: req.body.is_discontinued,
     description: req.body.description,
-    image: req.body.image,
+    images: req.body.imagesUrls,
   }
   try {
     const newProduct = await productModel.create(product)
@@ -71,7 +71,7 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
     name: req.body.name,
     is_discontinued: req.body.is_discontinued || false,
     description: req.body.description,
-    image: req.body.image,
+    images: req.body.images,
   }
   try {
     const newProduct = await productModel.update(req.params.productId, product)

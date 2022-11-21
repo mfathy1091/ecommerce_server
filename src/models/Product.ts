@@ -1,11 +1,13 @@
 import pool from '../config/db.config';
+import format from 'pg-format'
+
 export type Product = {
   id?: number,
   name: string,
   brand_id: number
   category_id: number,
   description: string,
-  image: string,
+  images: [],
   is_discontinued: boolean,
 }
 
@@ -100,14 +102,15 @@ export default class ProductModel {
       const sql = `
         SELECT 
           products.id, products.name, products.description,
-          brands.id AS "brandId", brands.name as "brandName",
-          categories.id AS "categoryId", categories.name as "categoryName",
-          images.url as "image"
+          json_agg(json_build_object('id', brands.id, 'name', brands.name)) AS brands,
+          json_agg(json_build_object('url', images.url)) AS images,
+          json_agg(json_build_object('id', categories.id, 'name', categories.name)) AS categories
         FROM products 
         LEFT JOIN brands ON products.brand_id = brands.id
         LEFT JOIN categories ON products.category_id = categories.id
         LEFT JOIN images ON products.id = images.product_id
         WHERE products.id=($1)
+        GROUP BY products.id
       `;
       const result = await connection.query(sql, [id]);
       return result.rows[0];
@@ -121,13 +124,18 @@ export default class ProductModel {
 
   async create(product: Product): Promise<Product> {
     let connection = await pool.connect();
+    
     try {
       const sql = "INSERT INTO products (brand_id, category_id, name, description, is_discontinued) VALUES ($1, $2, $3, $4, $5) RETURNING *";
       const result = await connection.query(sql, [product.brand_id, product.category_id, product.name, product.description, product.is_discontinued]);
       const newProduct = result.rows[0];
 
-      const sql2 = "INSERT INTO images (product_id, url, size, is_featured) VALUES ($1, $2, $3, $4) RETURNING *";
-      const result2 = await connection.query(sql2, [newProduct.id, product.image, 'large', 'false']);
+      let arr = product.images.map((image) => {
+        return [newProduct.id, image, 'large', 'false']
+      })
+
+      const sql2 = format("INSERT INTO images (product_id, url, size, is_featured) VALUES %L RETURNING *", arr);
+      const result2 = await connection.query(sql2);
       
       const finalProduct = {
         ...newProduct,
@@ -150,7 +158,7 @@ export default class ProductModel {
       const updatedProduct = result.rows[0];
 
       const sql2 = "INSERT INTO images (product_id, url, size, is_featured) VALUES ($1, $2, $3, $4) RETURNING *";
-      const result2 = await connection.query(sql2, [updatedProduct.id, product.image, 'large', 'false']);
+      const result2 = await connection.query(sql2, [updatedProduct.id, product.images, 'large', 'false']);
       const image = result2.rows[0];
 
       const finalProduct = {

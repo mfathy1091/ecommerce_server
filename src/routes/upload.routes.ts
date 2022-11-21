@@ -8,6 +8,7 @@ import multer, { FileFilterCallback } from 'multer'
 
 const router = express.Router();
 
-router.post('/avatar', verifyToken, isAdmin, uploadImage, upload, uploadController.uploadAvatar)
+router.post('/avatar', verifyToken, uploadImage, upload, uploadController.uploadAvatar)
+// router.post('/avatar', verifyToken, isAdmin, uploadImage, upload, uploadController.uploadAvatar)
 
 export default router;
