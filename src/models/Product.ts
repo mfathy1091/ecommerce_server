@@ -7,8 +7,9 @@ export type Product = {
   brand_id: number
   category_id: number,
   description: string,
-  images: [],
   is_discontinued: boolean,
+  images: [any],
+  attributeValues: [any]
 }
 
 export default class ProductModel {
@@ -102,16 +103,49 @@ export default class ProductModel {
       const sql = `
         SELECT 
           products.id, products.name, products.description,
-          json_agg(json_build_object('id', brands.id, 'name', brands.name)) AS brands,
-          json_agg(json_build_object('url', images.url)) AS images,
-          json_agg(json_build_object('id', categories.id, 'name', categories.name)) AS categories
+          brands.id as "brandId", brands.name as "brandName",
+          categories.id as "categoryId", categories.name as "categoryName",
+          images_query as images,
+          attributes_query as attributes
         FROM products 
-        LEFT JOIN brands ON products.brand_id = brands.id
-        LEFT JOIN categories ON products.category_id = categories.id
-        LEFT JOIN images ON products.id = images.product_id
+        
+        LEFT JOIN (
+          SELECT 
+            product_id,
+            json_agg(json_build_object('url', i.url)) images_query
+          FROM images i
+          GROUP BY product_id
+        ) i ON i.product_id = products.id
+
+        LEFT JOIN (
+          SELECT 
+            product_id,
+            json_agg(json_build_object('attributeName', attributes.name, 'attributeValueName', attribute_values.name)) attributes_query
+          FROM product_attribute_values pav
+          INNER JOIN attribute_values 
+            ON pav.attribute_value_id = attribute_values.id
+          INNER JOIN attributes
+            ON attribute_values.attribute_id = attributes.id
+          GROUP BY product_id
+        ) a ON a.product_id = products.id
+
+        LEFT JOIN brands
+          ON products.brand_id = brands.id
+        LEFT JOIN categories
+          ON products.category_id = categories.id
+
         WHERE products.id=($1)
-        GROUP BY products.id
+
       `;
+
+      // json_build_object(
+      //   'products', 
+      //   json_agg(json_build_object(
+      //     'id', products.id, 'name', products.name, 'description', products.description,
+      //     'images', images_query
+      //   ))
+      // )
+
       const result = await connection.query(sql, [id]);
       return result.rows[0];
     } catch (err) {
@@ -130,13 +164,20 @@ export default class ProductModel {
       const result = await connection.query(sql, [product.brand_id, product.category_id, product.name, product.description, product.is_discontinued]);
       const newProduct = result.rows[0];
 
-      let arr = product.images.map((image) => {
-        return [newProduct.id, image, 'large', 'false']
+      let images = product.images.map((image) => {
+        return [newProduct.id, image.url, 'large', 'false']
       })
 
-      const sql2 = format("INSERT INTO images (product_id, url, size, is_featured) VALUES %L RETURNING *", arr);
+      const sql2 = format("INSERT INTO images (product_id, url, size, is_featured) VALUES %L RETURNING *", images);
       const result2 = await connection.query(sql2);
       
+      let attributeValues = product.attributeValues.map((attributeValue) => {
+        return [newProduct.id, attributeValue.id]
+      })
+
+      const sql3 = format("INSERT INTO product_attribute_values (product_id, attribute_value_id) VALUES %L RETURNING *", attributeValues);
+      const result3 = await connection.query(sql3);
+
       const finalProduct = {
         ...newProduct,
         ...result2.rows[0]

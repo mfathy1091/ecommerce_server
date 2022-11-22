@@ -53,7 +53,8 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
     is_discontinued: false,
     // is_discontinued: req.body.is_discontinued,
     description: req.body.description,
-    images: req.body.imagesUrls,
+    images: req.body.images,
+    attributeValues: req.body.attributeValues
   }
   try {
     const newProduct = await productModel.create(product)
@@ -72,6 +73,7 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
     is_discontinued: req.body.is_discontinued || false,
     description: req.body.description,
     images: req.body.images,
+    attributeValues: req.body.attributeValues,
   }
   try {
     const newProduct = await productModel.update(req.params.productId, product)

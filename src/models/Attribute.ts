@@ -4,7 +4,7 @@ export type BaseAttribute = {
   id?: number,
   name: string,
   slug: string,
-  image?: string
+  image?: string,
   is_active: boolean
 }
 
@@ -45,7 +45,7 @@ export default class AttributeModel {
       sql = `
         SELECT 
           attributes.id AS id, attributes.name AS name, attributes.slug AS slug,
-          json_agg(attribute_values.name) as values
+          json_agg(json_build_object('id', attribute_values.id, 'name', attribute_values.name)) as values
         FROM attributes
         LEFT OUTER JOIN attribute_values ON attributes.id = attribute_values.attribute_id
         GROUP BY attributes.id
