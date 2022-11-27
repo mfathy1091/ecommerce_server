@@ -11,6 +11,7 @@ import authRouter from './auth.routes'
 import attributeRouter from './attribute.routes'
 import attributeValueRouter from './attributeValue.routes'
 import brandRouter from './brand.routes'
+import typeRouter from './type.routes'
 
 import app from './../server'
 import verifyToken from '../middlewares/verifyToken.middleware';
@@ -30,6 +31,7 @@ router.use('/auth', authRouter)
 router.use('/categories', categoryRouter)
 router.use('/attributes', attributeRouter)
 router.use('/brands', brandRouter)
+router.use('/types', typeRouter)
 router.use('/attribute-values', attributeValueRouter)
 // app.use(verifyToken);
 

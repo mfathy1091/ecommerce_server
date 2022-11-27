@@ -11,5 +11,8 @@ INSERT INTO attributes
   (name, slug)
 VALUES
   ('Material', 'material'),
-  ('Color', 'color'),
-  ('Frame Shape', 'frame-shape')
+  ('Frame Color', 'frame-color'),
+  ('Frame Shape', 'frame-shape'),
+  ('Frame Type', 'frame-type'),
+  ('Lenses Color', 'lenses-color'),
+  ('Lenses Type', 'lenses-type')

@@ -30,7 +30,12 @@ VALUES
   ('2', 'Yellow', 'yellow'),
   ('3', 'Aviator', 'aviator'),
   ('3', 'Cat-Eye', 'cat-eye'),
-  ('3', 'Rimless', 'rimless'),
   ('3', 'Round', 'round'),
-  ('3', 'Square', 'square')
+  ('3', 'Square', 'square'),
+  ('4', 'Rimless', 'rimless'),
+  ('4', 'Full Rim', 'full-rim'),
+  ('4', 'Half Rim', 'half-rim'),
+  ('5', 'Honey', 'honey'),
+  ('6', 'Polarized', 'polarized')
+
   

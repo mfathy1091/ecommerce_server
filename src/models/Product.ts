@@ -6,6 +6,7 @@ export type Product = {
   name: string,
   brand_id: number
   category_id: number,
+  type_id: number,
   description: string,
   is_discontinued: boolean,
   images: [any],
@@ -105,6 +106,7 @@ export default class ProductModel {
           products.id, products.name, products.description,
           brands.id as "brandId", brands.name as "brandName",
           categories.id as "categoryId", categories.name as "categoryName",
+          types.id as "typeId", types.name as "typeName",
           images_query as images,
           attributes_query as attributes
         FROM products 
@@ -120,7 +122,7 @@ export default class ProductModel {
         LEFT JOIN (
           SELECT 
             product_id,
-            json_agg(json_build_object('attributeName', attributes.name, 'attributeValueName', attribute_values.name)) attributes_query
+            json_agg(json_build_object('attributeName', attributes.name, 'attributeValueName', attribute_values.name, 'attributeValueId', attribute_values.id)) attributes_query
           FROM product_attribute_values pav
           INNER JOIN attribute_values 
             ON pav.attribute_value_id = attribute_values.id
@@ -133,6 +135,8 @@ export default class ProductModel {
           ON products.brand_id = brands.id
         LEFT JOIN categories
           ON products.category_id = categories.id
+        LEFT JOIN types
+          ON products.type_id = types.id
 
         WHERE products.id=($1)
 
@@ -160,19 +164,19 @@ export default class ProductModel {
     let connection = await pool.connect();
     
     try {
-      const sql = "INSERT INTO products (brand_id, category_id, name, description, is_discontinued) VALUES ($1, $2, $3, $4, $5) RETURNING *";
-      const result = await connection.query(sql, [product.brand_id, product.category_id, product.name, product.description, product.is_discontinued]);
+      const sql = "INSERT INTO products (brand_id, category_id, type_id, name, description, is_discontinued) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *";
+      const result = await connection.query(sql, [product.brand_id, product.category_id, product.type_id, product.name, product.description, product.is_discontinued]);
       const newProduct = result.rows[0];
 
-      let images = product.images.map((image) => {
+      let imagesArr = product.images.map((image) => {
         return [newProduct.id, image.url, 'large', 'false']
       })
 
-      const sql2 = format("INSERT INTO images (product_id, url, size, is_featured) VALUES %L RETURNING *", images);
+      const sql2 = format("INSERT INTO images (product_id, url, size, is_featured) VALUES %L RETURNING *", imagesArr);
       const result2 = await connection.query(sql2);
       
-      let attributeValues = product.attributeValues.map((attributeValue) => {
-        return [newProduct.id, attributeValue.id]
+      let attributeValues = product.attributeValues.map((attributeValueId) => {
+        return [newProduct.id, attributeValueId]
       })
 
       const sql3 = format("INSERT INTO product_attribute_values (product_id, attribute_value_id) VALUES %L RETURNING *", attributeValues);
@@ -194,17 +198,34 @@ export default class ProductModel {
   async update(productId: string, product: Omit<Product, "id">): Promise<Product> {
     let connection = await pool.connect();
     try {
-      const sql = "UPDATE products SET brand_id=$1, category_id=$2, name=$3, description=$4, is_discontinued=$5 WHERE id=$7 RETURNING *";
-      const result = await connection.query(sql, [product.brand_id, product.category_id, product.name, product.description, product.is_discontinued, productId]);
+      const sql = "UPDATE products SET brand_id=$1, category_id=$2, type_id=$3, name=$4, description=$5, is_discontinued=$6 WHERE id=$7 RETURNING *";
+      const result = await connection.query(sql, [product.brand_id, product.category_id, product.type_id, product.name, product.description, product.is_discontinued, productId]);
       const updatedProduct = result.rows[0];
 
-      const sql2 = "INSERT INTO images (product_id, url, size, is_featured) VALUES ($1, $2, $3, $4) RETURNING *";
-      const result2 = await connection.query(sql2, [updatedProduct.id, product.images, 'large', 'false']);
-      const image = result2.rows[0];
+
+
+      await connection.query("DELETE FROM images WHERE product_id=$1", [productId]);
+      await connection.query("DELETE FROM product_attribute_values WHERE product_id=$1", [productId]);
+
+      const imagesArr = product.images.map((image) => {
+        return [updatedProduct.id, image.url, 'large', 'false']
+      })
+
+      const sql2 = format("INSERT INTO images (product_id, url, size, is_featured) VALUES %L RETURNING *", imagesArr);
+      const result2 = await connection.query(sql2);
+      const images = result2.rows[0]
+
+      let attributeValues = product.attributeValues.map((attributeValueId) => {
+        return [updatedProduct.id, attributeValueId]
+      })
+
+      const sql3 = format("INSERT INTO product_attribute_values (product_id, attribute_value_id) VALUES %L RETURNING *", attributeValues);
+      const result3 = await connection.query(sql3);
+
 
       const finalProduct = {
         ...updatedProduct,
-        ...image
+        ...images
       }
       
       return finalProduct;

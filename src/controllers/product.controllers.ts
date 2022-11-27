@@ -49,6 +49,7 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
   const product: Product = {
     brand_id: Number(req.body.brandId),
     category_id: Number(req.body.categoryId),
+    type_id: Number(req.body.typeId),
     name: req.body.name,
     is_discontinued: false,
     // is_discontinued: req.body.is_discontinued,
@@ -69,6 +70,7 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
   const product: Omit<Product, "id"> = {
     brand_id: Number(req.body.brandId),
     category_id: Number(req.body.categoryId),
+    type_id: Number(req.body.typeId),
     name: req.body.name,
     is_discontinued: req.body.is_discontinued || false,
     description: req.body.description,
