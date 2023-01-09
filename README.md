@@ -1,4 +1,10 @@
-# Authentication System
+
+
+# Shop page
+https://mfathy.netlify.app/
+
+# Admin Dashboard
+https://mfathy.netlify.app/admin
 
 ## 1) Login
 * used JWT to create tokens.
