@@ -11,7 +11,7 @@ const index = async (req: Request, res: Response, next: NextFunction) => {
       const products = await productModel.index()
       res.json(products)
     } else {
-      if (!req.query.page) {
+      if (!req.query.page) { 
       
         const query = {
           categorySlug: req.query.categorySlug,
