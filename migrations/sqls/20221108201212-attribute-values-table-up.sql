@@ -11,31 +11,16 @@ CREATE TABLE attribute_values (
 INSERT INTO attribute_values
   (attribute_id, name, slug)
 VALUES
-  ('1', 'Metal', 'metal'),
-  ('1', 'Plastic', 'plastic'),
-  ('1', 'Mixed', 'mixed'),
-  ('1', 'Polycarbonate', 'polycarbonate'),
-  ('1', 'Glass', 'glass'),
-  ('2', 'Black', 'black'),
-  ('2', 'Blue', 'blue'),
-  ('2', 'Brown', 'brown'),
-  ('2', 'Crystal', 'crystal'),
-  ('2', 'Gold', 'gold'),
-  ('2', 'Green', 'green'),
-  ('2', 'Gray', 'gray'),
-  ('2', 'Orange', 'orange'),
-  ('2', 'Pink', 'pink'),
-  ('2', 'Voilet', 'voilet'),
-  ('2', 'White', 'white'),
-  ('2', 'Yellow', 'yellow'),
-  ('3', 'Aviator', 'aviator'),
-  ('3', 'Cat-Eye', 'cat-eye'),
-  ('3', 'Round', 'round'),
-  ('3', 'Square', 'square'),
-  ('4', 'Rimless', 'rimless'),
-  ('4', 'Full Rim', 'full-rim'),
-  ('4', 'Half Rim', 'half-rim'),
-  ('5', 'Honey', 'honey'),
-  ('6', 'Polarized', 'polarized')
+  ('1', '4', '4'),
+  ('1', '5', '5'),
+  ('2', '	192*192', '192*192'),
+  ('2', '160*160', '160*160'),
+  ('3', '	576*576', '	576*576')
+
+
 
   
+
+  -- ('Pixel Pitch', 'pixel_pitch'),
+  -- ('Module Size', 'module_size'),
+  -- ('Cabinet Size', 'cabinet-size')

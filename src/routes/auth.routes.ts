@@ -8,7 +8,6 @@ import * as controller from '../controllers/auth.controllers'
 const router = express.Router();
 
 router.post('/register', registerSchema, validateRequestSchema, controller.register)
-// router.post('/activation', controller.activation)
 router.post('/login', controller.login)
 router.get('/user', verifyToken, controller.getAuthUser)
 router.post('/logout', controller.logout)

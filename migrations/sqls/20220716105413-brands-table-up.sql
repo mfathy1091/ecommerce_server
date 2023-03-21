@@ -9,10 +9,5 @@ CREATE TABLE brands (
 INSERT INTO brands
   (name, slug)
 VALUES
-  ('Police', 'Police'),
-  ('Hoya', 'hoya'),
-  ('Fred', 'fred'),
-  ('Dior', 'dior'),
-  ('Ray Ban', 'ray-ban'),
-  ('Levis', 'levis'),
-  ('Boss', 'boss')
+  ('Huidi', 'huidi'),
+  ('NationSatr', 'nation-satr')

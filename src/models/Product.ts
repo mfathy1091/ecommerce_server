@@ -6,11 +6,14 @@ export type Product = {
   name: string,
   brand_id: number
   category_id: number,
-  type_id: number,
+  type_id?: number | null,
   description: string,
   is_discontinued: boolean,
   images: [any],
-  attributeValues: [any]
+  attributeValues: [any] | null,
+  pixel_pitch?: string,
+  module_size?: string,
+  cabinet_size?: string
 }
 
 export default class ProductModel {
@@ -162,6 +165,35 @@ export default class ProductModel {
 
   async create(product: Product): Promise<Product> {
     let connection = await pool.connect();
+    console.log(product);
+    
+    try {
+      const sql = "INSERT INTO products (brand_id, category_id, name, description, pixel_pitch, module_size, cabinet_size) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *";
+      const result = await connection.query(sql, [product.brand_id, product.category_id, product.name, product.description, product.pixel_pitch, product.module_size, product.cabinet_size]);
+      const newProduct = result.rows[0];
+
+      let imagesArr = product.images.map((image) => {
+        return [newProduct.id, image.url, 'large', 'false']
+      })
+
+      const sql2 = format("INSERT INTO images (product_id, url, size, is_featured) VALUES %L RETURNING *", imagesArr);
+      const result2 = await connection.query(sql2);
+
+      const finalProduct = {
+        ...newProduct,
+        ...result2.rows[0]
+      }
+
+      return finalProduct;
+    } catch (err) {
+      throw new Error(`Could not create product. Error:  ${(err as Error).message}`)
+    }finally {
+      connection.release();
+    }
+  }
+
+  async create2(product: Product): Promise<Product> {
+    let connection = await pool.connect();
     
     try {
       const sql = "INSERT INTO products (brand_id, category_id, type_id, name, description, is_discontinued) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *";
@@ -175,7 +207,7 @@ export default class ProductModel {
       const sql2 = format("INSERT INTO images (product_id, url, size, is_featured) VALUES %L RETURNING *", imagesArr);
       const result2 = await connection.query(sql2);
       
-      let attributeValues = product.attributeValues.map((attributeValueId) => {
+      let attributeValues = product.attributeValues?.map((attributeValueId) => {
         return [newProduct.id, attributeValueId]
       })
 
@@ -215,7 +247,7 @@ export default class ProductModel {
       const result2 = await connection.query(sql2);
       const images = result2.rows[0]
 
-      let attributeValues = product.attributeValues.map((attributeValueId) => {
+      let attributeValues = product.attributeValues?.map((attributeValueId) => {
         return [updatedProduct.id, attributeValueId]
       })
 

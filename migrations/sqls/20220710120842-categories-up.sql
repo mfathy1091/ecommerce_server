@@ -12,7 +12,6 @@ CREATE TABLE categories (
 INSERT INTO categories
     (parent_category_id, slug, name, is_active, image)
 VALUES
-    (null , 'glasses-lens', 'Glasses Lenses', true, 'https://res.cloudinary.com/dztskndab/image/upload/v1668331490/avatar/y9qwd89u8wyy1empkhyi.jpg'),
-    (null , 'sunglasses', 'Sunglasses', true, 'https://res.cloudinary.com/dztskndab/image/upload/v1668330290/avatar/dlfhdv73eyeqvscyc8pq.jpg'),
-    (null , 'eyeglasses', 'Eyeglasses', true, 'https://res.cloudinary.com/dztskndab/image/upload/v1668330633/avatar/kmp2klgn1hq2aledtmn8.jpg'),
-    (null, 'accessories', 'Accessories', true, 'https://res.cloudinary.com/dztskndab/image/upload/v1668333045/avatar/oprn3wm0jo32qfsh6ehd.jpg')
+    (null , 'outdoor-led-displayes', 'Outdoor Led Displayes', true, 'https://res.cloudinary.com/dztskndab/image/upload/v1668331490/avatar/y9qwd89u8wyy1empkhyi.jpg'),
+    (null , 'indoor-led-displayes', 'Indoor Led Displayes', true, 'https://res.cloudinary.com/dztskndab/image/upload/v1668331490/avatar/y9qwd89u8wyy1empkhyi.jpg'),
+    (null , 'controllers', 'Controllers', true, 'https://res.cloudinary.com/dztskndab/image/upload/v1668331490/avatar/y9qwd89u8wyy1empkhyi.jpg')

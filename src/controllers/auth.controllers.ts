@@ -41,8 +41,9 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
     // (3) create new user
     const newUser = await userModel.create(user)
     
-    // (4) Send confirmation email
+    // (4) Send confirmation email --- to be added ---
 
+    // (5) Return response
     return res.status(201).json({
       'message': 'Successfuly created!',
       'user': newUser,

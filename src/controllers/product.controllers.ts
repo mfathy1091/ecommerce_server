@@ -49,14 +49,18 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
   const product: Product = {
     brand_id: Number(req.body.brandId),
     category_id: Number(req.body.categoryId),
-    type_id: Number(req.body.typeId),
+    // type_id: Number(req.body.typeId) || null,
     name: req.body.name,
     is_discontinued: false,
     // is_discontinued: req.body.is_discontinued,
     description: req.body.description,
     images: req.body.images,
-    attributeValues: req.body.attributeValues
+    attributeValues: req.body.attributeValues,
+    pixel_pitch: req.body.pixelPitch,
+    module_size: req.body.moduleSize,
+    cabinet_size: req.body.cabinetSize
   }
+
   try {
     const newProduct = await productModel.create(product)
     res.status(201)
