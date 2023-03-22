@@ -1,7 +1,8 @@
 
 
-# Shop page
-https://mfathy.netlify.app/
+# API url
+http://172.104.251.26/api
+* deployed on a VPS server.
 
 # Admin Dashboard
 https://mfathy.netlify.app/admin
