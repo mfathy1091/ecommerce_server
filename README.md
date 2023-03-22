@@ -8,13 +8,13 @@ The API is deployed to a VPS server at: http://172.104.251.26/api
 
 #### 1) Login
 * used JWT to create tokens.
-![Screenshot](images/login_flowchart.png)
+![Screenshot](https://res.cloudinary.com/dztskndab/image/upload/v1679477191/github_ecommerce_server/login_flowchart_okt6i6.png)
 
 #### 2) Accessing Protected Resources - With Expired AccessToken
 -  A legal JWT must be added to HTTP Header if Client accesses protected resources.
 - With the help of Axios Interceptors, React App can check if the accessToken (JWT) is expired (401), sends /refreshToken request to receive new accessToken and use it for new resource request.
 
-![screenshot](images/Access%20Protected%20Resources%20-%20with%20expired%20access%20token.png)
+![screenshot](https://res.cloudinary.com/dztskndab/image/upload/v1679477191/github_ecommerce_server/Access_Protected_Resources_-_with_expired_access_token_zljuhb.png)
 
 
 ---
@@ -25,14 +25,18 @@ The API is deployed to a VPS server at: http://172.104.251.26/api
 https://mfathy.netlify.app/admin
 
 `base_url` => `http://172.104.251.26/api`
-### Auth
+##### Auth
 - login [POST] => `/auth/login`
 - register [POST] => `/auth/register`
 
-#### Users
+##### Users
 - all users [GET] >> '/users' 
 - get one user [GET] >> '/users/:userId' 
 - Create one user [POST] >> '/users'
+
+##### Roles / Categories / Orders / Products / Arributes
+ - *under development*
+
 
 ---
 ### Example - Login
